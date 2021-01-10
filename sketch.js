@@ -1,5 +1,6 @@
 
 var gameState = "level1";
+var gameState2 = 0;
 var star;
 var man, man_running;
 var ground, invisibleGround, groundImage;
@@ -15,7 +16,7 @@ function preload(){
  // man_running =   loadAnimation("man1.png", "man2.png", "man3.png", "man4.png", "man5.png", "man6.png", "man7.png", "man8.png", "man10.png", "man11.png");
   man_running =   loadAnimation("man1.png", "man4.png", "man6.png"); 
   pollImg = loadImage("poll123.png");
-  umempImg=loadImage('unemployment.jpg');
+  umempImg=loadImage('unemployment.png');
   eduImg=loadImage('noBook.png');
   gwImg=loadImage('gw.png');
   pandImg=loadImage('pandemic.png');
@@ -50,7 +51,7 @@ function setup() {
 
   
 
-  man= createSprite(800,600);
+  man= createSprite(1000,600);
   //man.velocityY=2;
   man.addAnimation("running", man_running);
   man.scale = 0.6;
@@ -69,9 +70,10 @@ function draw() {
   background("white");
   
     problem.x = man.x;
-    if(bg<200){
+    if(bg.y<200){
       bg.y=windowHeight/2;
     }
+    if(gameState2===0){
     switch(gameState){
     case "level1": problem.addImage(eduImg);
                    problem.scale =0.5;
@@ -105,7 +107,7 @@ function draw() {
                   break;
     default: break;
       
-  }
+  }}
   
   if (gameState!=="end"){
     if(keyDown("RIGHT_ARROW")){
@@ -153,6 +155,7 @@ function draw() {
   textSize(25);
    text("STARS: "+ score, 484.9,55);
   if(score === 5){
+    gameState2 = 1;
   Questions();
   }
   }
@@ -168,7 +171,7 @@ function draw() {
  }
 }
 function EduCollection(){
-  if (frameCount%50===0 && gameState=="level1"){
+  if (frameCount%50===0 && gameState=="level1"&& gameState2 === 0){
     var pencil = createSprite(random(400, windowWidth-400), random(problem.y, windowHeight), 100, 100);
     pencil.velocityX = 6;
     pencil.lifetime=500;
@@ -179,7 +182,7 @@ function EduCollection(){
     
   }
 function unempCollection(){
-    if (frameCount%50===0 && gameState=="level2"){
+    if (frameCount%50===0 && gameState=="level2"&& gameState2 === 0){
       var job = createSprite(random(400, windowWidth-400), random(problem.y, windowHeight), 100, 100);
       job.velocityX = 6;
       job.lifetime=500;
@@ -190,7 +193,7 @@ function unempCollection(){
       
     }
 function pollCollection(){
-      if (frameCount%50===0  && gameState=="level3"){
+      if (frameCount%50===0  && gameState=="level3"&& gameState2 === 0){
         var tree = createSprite(random(400, windowWidth-400), random(problem.y, windowHeight), 100, 100);
        tree.velocityX = 6;
        tree.lifetime=500;
@@ -202,7 +205,7 @@ function pollCollection(){
       }
       
 function pandCollection(){
-     if (frameCount%50===0 && gameState=="level4"){
+     if (frameCount%50===0 && gameState=="level4"&& gameState2 === 0){
           var vaccine = createSprite(random(400, windowWidth-400), random(problem.y, windowHeight), 100, 100);
           vaccine.velocityX = 6;
           vaccine.lifetime=500;
@@ -213,7 +216,7 @@ function pandCollection(){
           
         }
 function gwCollection(){
-     if (frameCount%50===0 && gameState=="level5"){
+     if (frameCount%50===0 && gameState=="level5"&& gameState2 === 0){
             var laws = createSprite(random(400, windowWidth-400), random(problem.y, windowHeight), 100, 100);
             laws.velocityX = 6;
             laws.lifetime=500;
@@ -224,62 +227,87 @@ function gwCollection(){
            
           }
         
-function Questions(){
-  
-    
-    var yes=createSprite(500,400,50,50);
+   function Questions(){
+     
+    var yes=createSprite(700,400,50,50);
     yes.addImage(yesImg);
-    var no=createSprite(1300,400,50,50);
+    yes.scale =0.2;
+    var no=createSprite(1200,400,50,50);
     no.addImage(noImg);
+    no.scale = 0.2;
 
     //Change Questions according to level, change gameState according to levels. 
     switch(gameState){
-      case "level1":     background(0);
-      text(' Do you think that inequalities like gender and cultural identity should affect education’s reach?', 200,400);
+      case "level1":    
+                         textSize(25);
+                        text(' Do you think that inequalities like gender and cultural identity should affect education’s reach?', 400,250);
                       if(mousePressedOver(yes)){
                         no.destroy();
-        yes.destroy()
+                        yes.destroy()
                         gameState = "end";
-                      }else{
+                      }else if(mousePressedOver(no)){
                         no.destroy();
-        yes.destroy()
+                        yes.destroy();
                         gameState = "level2";
+                        gameState2 = 0;
+                        score = 0;
                       }
+                      console.log(gameState);
                     break;
-      case "level2": text('If you met a stranger on the road who is looking for a job, would you reference him/her to a potential employee you know of?', 200,400);
+      case "level2": text('If you met a stranger on the road who is looking for a job, would you reference him/her to a potential employee you know of?', 400,400);
       if(mousePressedOver(no)){
-        
+        no.destroy();
+        yes.destroy()
         gameState = "end";
-      }else{
+      }else if(mousePressedOver(yes)){
+        no.destroy();
+        yes.destroy();
         gameState = "level3";
+        gameState2 = 0;
+        score = 0;
       }
-                    break;  
-      case "level3": text(' Do you believe in reusing materials like newspaper and other scraps and wish to spread awareness about pollution?', 200,400);
+      console.log(gameState);
+    break;
+      case "level3": text(' Do you believe in reusing materials like newspaper and other scraps and wish to spread awareness about pollution?', 400,400);
       if(mousePressedOver(no)){
+        no.destroy();
+        yes.destroy()
         gameState = "end";
-      }else{
+      }else if(mousePressedOver(yes)){
+        no.destroy();
+        yes.destroy();
         gameState = "level4";
+        gameState2 = 0;
+        score = 0;
       }
-            break;
-      case "level4": text("Do you think that you should obey sanitation rules during a pandemic if others aren't? ", 200,400);
+      console.log(gameState);
+    break;
+      case "level4": text("Do you think that you should obey sanitation rules during a pandemic if others aren't? ", 400,400);
       if(mousePressedOver(no)){
+        no.destroy();
+        yes.destroy()
         gameState = "end";
-      }else{
+      }else if(mousePressedOver(yes)){
+        no.destroy();
+        yes.destroy();
         gameState = "level5";
+        gameState2 = 0;
+        score = 0;
       }
-       break;
-      case "level5": text(' Do you think switching off your lights and fans and reducing water waste can prevent pollution?', 200,400);
-      if(mousePressedOver(no)){
+      console.log(gameState);
+    break;
+      case "level5": text(' Do you think switching off your lights and fans and reducing water waste can prevent pollution?', 400,400);
+      if(mousePressedOver(yes)){
+        no.destroy();
+        yes.destroy()
+        gameState = "end";
+      }else if(mousePressedOver(no)){
+        no.destroy();
+        yes.destroy()
         gameState = "end";
       }
-      else{
-        /*
-        background(0);
-    fill('red');
-    text('YOU ARE SUCCESSFUL IN SAVING THE EARTH', 650,500);
-    */
-      }
-         break;
+      console.log(gameState);
+    break;
       }
 
     }
